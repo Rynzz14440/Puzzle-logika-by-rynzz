@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Puzzle Belajar by rynzz</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: white;
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* Loading Page */
+  #loading {
+    position: fixed;
+    inset: 0;
+    background: #0a0a23;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  #loading img {
+    width: 120px;
+    animation: bounce 1.8s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  /* Home Page */
+  #home {
+    display: none;
+    text-align: center;
+    padding-top: 80px;
+  }
+
+  #home img {
+    width: 160px;
+    margin-bottom: 40px;
+  }
+
+  .btn {
+    display: block;
+    width: 200px;
+    margin: 10px auto;
+    padding: 12px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+  }
+
+  /* Quiz Section */
+  #quiz {
+    display: none;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .question {
+    font-size: 22px;
+    margin: 20px 0;
+  }
+
+  .option {
+    display: block;
+    margin: 10px auto;
+    width: 80%;
+    max-width: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .option:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .correct { background: rgba(0, 255, 0, 0.3); }
+  .wrong { background: rgba(255, 0, 0, 0.3); }
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div id="loading">
+  <!-- 🧩 Ganti ini dengan logo loading kamu -->
+  <img id="loading-img" src="https://files.catbox.moe/am4g8s.jpg" alt="Logo Loading">
+</div>
+
+<!-- Home Screen -->
+<div id="home">
+  <!-- 🧩 Ganti ini dengan logo utama kamu -->
+  <img id="home-logo-img" src="LOGO_UTAMA_KAMU.png" alt="Logo Utama">
+  <button class="btn" id="tutorial-btn">Tutorial</button>
+  <button class="btn" id="main-btn">Main</button>
+  <button class="btn" id="developer-btn">Channel Developer</button>
+</div>
+
+<!-- Quiz Section -->
+<div id="quiz">
+  <h2 id="question" class="question"></h2>
+  <div id="options"></div>
+</div>
+
+<script>
+// ==========================
+// LOADING TRANSITION
+// ==========================
+setTimeout(() => {
+  document.getElementById("loading").style.display = "none";
+  document.getElementById("home").style.display = "block";
+}, 2500);
+
+// ==========================
+// LINK TELEGRAM DEVELOPER
+// ==========================
+document.getElementById("developer-btn").onclick = () => {
+  window.open("https://t.me/AboutNativeFlows", "_blank");
+};
+
+// ==========================
+// QUIZ LOGIC
+// ==========================
+const questions = [
+  // 🌍 Planet & Tata Surya
+  { question: "Planet terbesar di tata surya?", options: ["Bumi", "Jupiter", "Saturnus"], answer: 1 },
+  { question: "Planet terdekat dengan Matahari?", options: ["Venus", "Merkurius", "Mars"], answer: 1 },
+  { question: "Planet yang dikenal sebagai planet merah?", options: ["Mars", "Saturnus", "Venus"], answer: 0 },
+  { question: "Berapa jumlah planet di tata surya?", options: ["8", "9", "7"], answer: 0 },
+  { question: "Planet dengan cincin paling mencolok?", options: ["Uranus", "Neptunus", "Saturnus"], answer: 2 },
+  { question: "Planet paling jauh dari Matahari?", options: ["Uranus", "Neptunus", "Pluto"], answer: 1 },
+  { question: "Planet yang dikenal sebagai kembaran bumi?", options: ["Venus", "Mars", "Merkurius"], answer: 0 },
+  { question: "Planet yang paling cepat rotasinya?", options: ["Bumi", "Jupiter", "Mars"], answer: 1 },
+  { question: "Planet terbesar kedua setelah Jupiter?", options: ["Saturnus", "Uranus", "Neptunus"], answer: 0 },
+  { question: "Planet yang punya hari terpanjang?", options: ["Venus", "Mars", "Merkurius"], answer: 0 },
+
+  // ⚔️ Sejarah Perang
+  { question: "Perang Dunia II berakhir tahun?", options: ["1945", "1939", "1950"], answer: 0 },
+  { question: "Siapa pemimpin Nazi Jerman?", options: ["Hitler", "Mussolini", "Stalin"], answer: 0 },
+  { question: "Bom atom dijatuhkan di kota mana?", options: ["Tokyo", "Hiroshima", "Seoul"], answer: 1 },
+  { question: "Perang Dunia I dimulai tahun?", options: ["1914", "1918", "1939"], answer: 0 },
+  { question: "Negara yang diserang pertama kali oleh Jerman?", options: ["Prancis", "Polandia", "Belgia"], answer: 1 },
+  { question: "Perang Dunia II berakhir setelah penyerahan negara?", options: ["Jepang", "Jerman", "Italia"], answer: 0 },
+  { question: "Aliansi Sekutu dipimpin oleh?", options: ["AS, Inggris, Uni Soviet", "Jerman, Italia, Jepang", "Cina, Korea, India"], answer: 0 },
+  { question: "Hitler lahir di negara mana?", options: ["Austria", "Jerman", "Swiss"], answer: 0 },
+  { question: "Perang dingin terjadi antara?", options: ["AS & Uni Soviet", "Cina & Jepang", "AS & Jerman"], answer: 0 },
+  { question: "Negara pertama yang menyerang Pearl Harbor?", options: ["Korea", "Jepang", "Cina"], answer: 1 },
+
+  // 💻 Coding
+  { question: "Bahasa pemrograman untuk web?", options: ["HTML", "Python", "C++"], answer: 0 },
+  { question: "Kepanjangan dari CSS?", options: ["Color Style System", "Cascading Style Sheets", "Creative Sheet Style"], answer: 1 },
+  { question: "Bahasa untuk logika website?", options: ["JavaScript", "HTML", "CSS"], answer: 0 },
+  { question: "Python diciptakan oleh?", options: ["Guido van Rossum", "James Gosling", "Mark Zuckerberg"], answer: 0 },
+  { question: "Simbol komentar di JavaScript?", options: ["//", "#", "<!--"], answer: 0 },
+  { question: "Bahasa backend populer?", options: ["PHP", "HTML", "CSS"], answer: 0 },
+  { question: "Git digunakan untuk?", options: ["Versi kode", "Mendesain UI", "Membuat gambar"], answer: 0 },
+  { question: "Framework web JS populer?", options: ["React", "Pandas", "NumPy"], answer: 0 },
+  { question: "HTML singkatan dari?", options: ["HyperText Markup Language", "Hyper Transfer Markup List", "HighText Modern Language"], answer: 0 },
+  { question: "Perintah cetak di Python?", options: ["print()", "echo()", "write()"], answer: 0 },
+
+  // ☪️ Agama
+  { question: "Kitab umat Islam?", options: ["Al-Qur'an", "Injil", "Taurat"], answer: 0 },
+  { question: "Hari raya umat Islam?", options: ["Idul Fitri", "Natal", "Waisak"], answer: 0 },
+  { question: "Nabi terakhir umat Islam?", options: ["Isa", "Musa", "Muhammad SAW"], answer: 2 },
+  { question: "Jumlah rukun Islam?", options: ["5", "6", "7"], answer: 0 },
+  { question: "Arah kiblat?", options: ["Barat", "Timur", "Ka'bah"], answer: 2 },
+  { question: "Bulan puasa disebut?", options: ["Muharram", "Ramadhan", "Syawal"], answer: 1 },
+  { question: "Nabi yang bisa berbicara dengan burung?", options: ["Sulaiman", "Daud", "Yusuf"], answer: 0 },
+  { question: "Nama ayah Nabi Muhammad?", options: ["Abdullah", "Abdul Muthalib", "Abu Thalib"], answer: 0 },
+  { question: "Shalat wajib dalam sehari?", options: ["5", "4", "6"], answer: 0 },
+  { question: "Tempat pertama turun wahyu?", options: ["Gua Hira", "Ka'bah", "Masjidil Aqsa"], answer: 0 },
+
+  // ➕ Matematika
+  { question: "Akar kuadrat dari 81?", options: ["8", "9", "10"], answer: 1 },
+  { question: "π (pi) bernilai?", options: ["3.14", "2.17", "4.13"], answer: 0 },
+  { question: "10² =", options: ["100", "20", "200"], answer: 0 },
+  { question: "Persamaan garis y = mx + c, m adalah?", options: ["Gradien", "Konstanta", "Koordinat"], answer: 0 },
+  { question: "Hasil 12 × 8 =", options: ["96", "88", "108"], answer: 0 },
+  { question: "Hasil 15 ÷ 3 =", options: ["4", "5", "6"], answer: 1 },
+  { question: "Bilangan prima terkecil?", options: ["1", "2", "3"], answer: 1 },
+  { question: "Luas persegi dengan sisi 6 cm?", options: ["36", "12", "18"], answer: 0 },
+  { question: "Volume kubus sisi 3 cm?", options: ["9", "27", "18"], answer: 1 },
+  { question: "Nilai x pada 2x+4=10?", options: ["2", "3", "4"], answer: 2 },
+
+  // 🗣️ Bahasa Inggris
+  { question: "Arti kata 'beautiful'?", options: ["Cantik", "Cepat", "Kuat"], answer: 0 },
+  { question: "Bahasa Inggris dari 'Meja'?", options: ["Chair", "Table", "Book"], answer: 1 },
+  { question: "Bahasa Inggris dari 'Sekolah'?", options: ["School", "Class", "Lesson"], answer: 0 },
+  { question: "Arti kata 'strong'?", options: ["Lemah", "Kuat", "Baik"], answer: 1 },
+  { question: "Bahasa Inggris dari 'Buku'?", options: ["Pen", "Paper", "Book"], answer: 2 },
+  { question: "Bahasa Inggris dari 'Kucing'?", options: ["Dog", "Cat", "Bird"], answer: 1 },
+  { question: "Arti kata 'run'?", options: ["Tidur", "Berlari", "Menulis"], answer: 1 },
+  { question: "Bahasa Inggris dari 'Air'?", options: ["Water", "Wind", "Fire"], answer: 0 },
+  { question: "Arti kata 'teacher'?", options: ["Murid", "Guru", "Teman"], answer: 1 },
+  { question: "Bahasa Inggris dari 'Rumah'?", options: ["Home", "Road", "Room"], answer: 0 },
+];
+
+// pilih 15 acak
+let selected = [];
+while (selected.length < 15) {
+  let q = questions[Math.floor(Math.random() * questions.length)];
+  if (!selected.includes(q)) selected.push(q);
+}
+
+let index = 0;
+let score = 0;
+
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+
+document.getElementById("main-btn").onclick = () => {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("quiz").style.display = "block";
+  loadQuestion();
+};
+
+function loadQuestion() {
+  if (index >= selected.length) {
+    questionEl.innerText = `Selesai! Nilai kamu: ${score}/${selected.length}`;
+    optionsEl.innerHTML = "";
+    return;
+  }
+  const q = selected[index];
+  questionEl.innerText = q.question;
+  optionsEl.innerHTML = "";
+  q.options.forEach((opt, i) => {
+    const div = document.createElement("div");
+    div.className = "option";
+    div.innerText = opt;
+    div.onclick = () => checkAnswer(i, q.answer, div);
+    optionsEl.appendChild(div);
+  });
+}
+
+function checkAnswer(i, ans, div) {
+  if (i === ans) {
+    div.classList.add("correct");
+    score++;
+  } else {
+    div.classList.add("wrong");
+  }
+  setTimeout(() => {
+    index++;
+    loadQuestion();
+  }, 800);
+}
+</script>
+</body>
+  </html>
